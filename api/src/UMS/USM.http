@@ -1,0 +1,13 @@
+@USM_HostAddress = https://localhost:7034
+
+### GET all users
+GET {{USM_HostAddress}}/api/user
+Accept: application/json
+
+### GET a user by ID
+GET {{USM_HostAddress}}/api/user/{id}
+Accept: application/json
+
+### DELETE
+DELETE {{USM_HostAddress}}/api/user/{id}
+Accept: application/json

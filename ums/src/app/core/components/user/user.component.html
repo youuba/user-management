@@ -1,0 +1,97 @@
+<p-toast position="top-center"></p-toast>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+<div class="flex justify-content-end mb-2">
+  <p-button (click)="openCreateDialog()" label="Create new" icon="pi pi-user-plus" class="mr-5" />
+</div>
+
+<p-table #dt [value]="Users" [paginator]="true" [rows]="4" [showCurrentPageReport]="true"
+  styleClass="p-datatable-striped " [globalFilterFields]="['userName','email']" *ngIf="Users.length > 0; else noData">
+<ng-template pTemplate="caption">
+  <div class="flex">
+      <h2>User Management </h2>
+      <span class="p-input-icon-left ml-auto mb-5">
+          <i class="pi pi-search"></i>
+          <input pInputText class="p-inputtext-sm" type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
+      </span>
+  </div>
+</ng-template>
+  <ng-template pTemplate="header" class="p-fluid">
+    <tr>
+      <th *ngFor="let col of cols" pSortableColumn="{{ col.field }}">
+        {{col.header}} 
+        <p-sortIcon [field]="col.field"></p-sortIcon>
+      </th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-User>
+    <tr>
+      <td *ngFor="let col of cols;">
+        {{ User[col.field] }}
+      </td>
+      <td>     
+        <p-button (click)="openEditDialog(User)" label="" class="me-1" severity="info" [rounded]="true" icon="pi pi-user-edit" />
+        <p-button (click)="onDeleteSubmit(User.id)" label="" severity="danger" [rounded]="true"  icon="pi pi-user-minus"/>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+<ng-template #noData>
+  <p>No data available.</p>
+</ng-template>
+<p-dialog header="New User" [modal]="true" [(visible)]="displayCreate">
+  <form [formGroup]="createForm" (ngSubmit)="onCreateSubmit()">
+    <div class="p-fluid">
+      <input id="id" formControlName="id" hidden/>
+      <div class="p-field">
+        <label for="userName">UserName</label>
+        <input id="userName" pInputText formControlName="userName" class="p-inputtext" />
+        <small *ngIf="createForm.get('userName')?.invalid && (createForm.get('userName')?.touched || createForm.get('userName')?.dirty)" class="p-error">
+          {{ errMssgCreateUserName() }}
+        </small>
+      </div>
+      <div class="p-field">
+        <label for="email">Email</label>
+        <input id="email" pInputText formControlName="email" class="p-inputtext" />
+        <small *ngIf="createForm.get('email')?.invalid && (createForm.get('email')?.touched || createForm.get('email')?.dirty)" class="p-error">
+          {{ errMssgCreateEmail() }}
+        </small>
+      </div>
+      <div class="p-field">
+        <label for="password">Password</label>
+        <input id="password" pInputText formControlName="password" class="p-inputtext" />
+        <small *ngIf="createForm.get('password')?.invalid && (createForm.get('password')?.touched || createForm.get('password')?.dirty)" class="p-error">
+          {{ errMssgCreatePassword() }}
+        </small>
+      </div>
+      <input id="role"  formControlName="role" hidden/>
+      <div class="p-field mt-2"  >
+        <button pButton type="submit" label="Save" class="p-button p-button-primary"></button>
+      </div>
+    </div>
+  </form>
+</p-dialog>
+<p-dialog header="Edit User" [modal]="true" [(visible)]="displayEdit">
+  <form [formGroup]="editForm" (ngSubmit)="onEditSubmit()">
+    <div class="p-fluid">
+      <div class="p-field">
+        <label for="editUserName">UserName</label>
+        <input id="editUserName" pInputText formControlName="userName" class="p-inputtext" />
+        <small *ngIf="editForm.get('userName')?.invalid && (editForm.get('userName')?.touched || editForm.get('userName')?.dirty)" class="p-error">
+          {{ errMssgEditUserName() }}
+        </small>
+      </div>
+      <div class="p-field">
+        <label for="editEmail">Email</label>
+        <input id="editEmail" pInputText formControlName="email" class="p-inputtext" />
+        <small *ngIf="editForm.get('email')?.invalid && (editForm.get('email')?.touched || editForm.get('email')?.dirty)" class="p-error">
+          {{ errMssgEditEmail() }}
+        </small>
+      </div>
+      <div class="p-field mt-2">
+        <button pButton type="submit" label="Save" class="p-button 
+        p-button-primary"></button>
+      </div>
+    </div>
+  </form>
+</p-dialog> 

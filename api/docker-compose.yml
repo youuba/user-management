@@ -1,0 +1,24 @@
+services:
+
+ ums-sql:
+   image: mcr.microsoft.com/mssql/server:2022-latest
+   ports:
+    - 8082:1433
+   environment:
+    - ACCEPT_EULA=Y
+    - MSSQL_USER:sa
+    - SA_PASSWORD=P@assw0rd!
+   
+ ums-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+     - 8081:8081 
+     - 8080:8080
+    depends_on:
+      - ums-sql
+    environment:
+     - DB_HOST=ums-sql
+     - DB_NAME=ums
+     - DB_SA_PASSWORD=P@assw0rd!

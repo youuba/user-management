@@ -1,0 +1,37 @@
+services:
+
+ # Defines a service for the SQL Server database
+ ums-db:
+   image: mcr.microsoft.com/mssql/server:2022-latest
+   ports:
+    - 8082:1433
+   environment:
+    - ACCEPT_EULA=Y
+    - MSSQL_USER:sa
+    - SA_PASSWORD=P@assw0rd!
+    
+ # Defines a service for the Web API  
+ ums-api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+     - 8081:8081 
+     - 8080:8080
+    depends_on:
+      - ums-db
+    environment:
+     - DB_HOST=ums-db
+     - DB_NAME=ums
+     - DB_SA_PASSWORD=P@assw0rd!
+     
+ # Defines a service for the frontend application
+ ums-app:
+    build:
+      context: ./ums
+      dockerfile: Dockerfile
+    ports:
+     - 4200:80 
+    depends_on:
+     - ums-api
+     

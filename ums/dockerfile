@@ -1,0 +1,33 @@
+### STAGE 1: Compile and Build ###
+
+### Use the LTS version of Node.js on Alpine as the base image
+FROM node:lts-alpine AS build
+
+#### make the 'app' folder the current working directory
+WORKDIR /app
+
+#### Copy package.json and package-lock.json
+COPY package*.json ./
+
+#### install project dependencies
+RUN npm install
+
+#### install angular cli
+RUN npm install -g @angular/cli
+
+####  Copy the source code to the container
+COPY . .
+
+####  Build the application in production mode
+RUN ng build --configuration=production
+
+### STAGE 2: Server app with nginx server ###
+
+### Use the latest Nginx image as the base
+FROM nginx:latest
+
+#### Copy the build artifacts to Nginx's HTML directory
+COPY --from=build app/dist/ums.ui/browser /usr/share/nginx/html
+
+# Expose port 80
+EXPOSE 80
