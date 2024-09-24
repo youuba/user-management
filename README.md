@@ -26,5 +26,17 @@ To verify that the system is functioning correctly, open your browser and naviga
 
 http://localhost:4200
 
+## Stack
+* `ASP.NET Core`
+* `SqlServer`
+* `UnitOfWork`
+* `PrimeNG`
+* `typeScript`
+* `Xunit`
+* `Serilog`
+* `Docker`
+* `DockerCompose`
+* `NGINX`
+
 ## Thanks!
  
